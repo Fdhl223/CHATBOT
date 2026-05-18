@@ -3,6 +3,7 @@
 # =========================================================
 
 import requests
+import streamlit as st
 
 # API Configuration
 PRIMARY_API_KEY = st.secrets["PRIMARY_API_KEY"]
