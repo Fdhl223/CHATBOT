@@ -1,4 +1,12 @@
-requests
-pandas
 streamlit
+pandas
+requests
 sqlalchemy
+pymysql
+psycopg2-binary
+openai
+pypdf
+python-docx
+openpyxl
+requests
+mysql-connector-python
