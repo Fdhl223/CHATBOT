@@ -146,11 +146,44 @@ def load_sql(uploaded_file):
     try:
         sql_content = uploaded_file.read().decode('utf-8')
         
+        # Filter MySQL-specific statements yang tidak kompatibel dengan SQLite
+        lines = []
+        for line in sql_content.split('\n'):
+            # Skip MySQL-specific statements
+            line_upper = line.strip().upper()
+            if any(skip in line_upper for skip in [
+                'SET ', 'SET;',
+                'USE ', 'USE;',
+                'DROP DATABASE',
+                'CREATE DATABASE',
+                'CHARACTER SET',
+                'COLLATE',
+                '/*!',
+                'LOCK TABLES',
+                'UNLOCK TABLES'
+            ]):
+                continue
+            lines.append(line)
+        
+        cleaned_content = '\n'.join(lines)
+        
         conn = sqlite3.connect(":memory:")
         cursor = conn.cursor()
         
-        # Execute SQL statements
-        cursor.executescript(sql_content)
+        # Execute SQL statements with better error handling
+        try:
+            cursor.executescript(cleaned_content)
+        except sqlite3.OperationalError:
+            # Jika executescript gagal, coba execute statement per baris
+            statements = cleaned_content.split(';')
+            for statement in statements:
+                stmt = statement.strip()
+                if stmt and not stmt.startswith('--'):
+                    try:
+                        cursor.execute(stmt)
+                    except sqlite3.OperationalError:
+                        continue
+        
         conn.commit()
         
         # Get all tables
