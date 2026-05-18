@@ -1,4 +1,4 @@
 requests
 pandas
 streamlit
-SQLAlchemy
+sqlalchemy
