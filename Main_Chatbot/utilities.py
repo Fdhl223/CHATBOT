@@ -6,9 +6,8 @@ import requests
 import streamlit as st
 
 # API Configuration
-PRIMARY_API_KEY = st.secrets["PRIMARY_API_KEY"]
+PRIMARY_API_KEY = st.secrets["OPENAI_API_KEY"]
 BACKUP_API_KEY = st.secrets["BACKUP_API_KEY"]
-
 MODEL_NAME = "openai/gpt-oss-120b:free"
 
 # LLM Request Payload
